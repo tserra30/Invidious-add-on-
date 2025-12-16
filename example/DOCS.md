@@ -1,8 +1,8 @@
-# Home Assistant Add-on: Example add-on
+# Home Assistant Add-on: Invidious
 
 ## How to use
 
-This add-on really does nothing. It is just an example.
+This add-on provides Invidious, a privacy-friendly alternative YouTube frontend.
 
 When started it will print the configured message or "Hello world" in the log.
 
