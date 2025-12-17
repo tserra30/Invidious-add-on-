@@ -5,11 +5,8 @@ slug: invidious
 description: Invidious - Privacy-friendly YouTube frontend
 url: "https://github.com/tserra30/Invidious-adon-/tree/main/example"
 arch:
-  - armhf
-  - armv7
   - aarch64
   - amd64
-  - i386
 init: false
 map:
   - share:rw
