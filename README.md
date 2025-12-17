@@ -4,7 +4,7 @@ This is an add-on for Home Assistant that adds Invidious
 
 [![Open your Home Assistant instance and show the add add-on repository dialog with a specific repository URL pre-filled.](https://my.home-assistant.io/badges/supervisor_add_addon_repository.svg)](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2Ftserra30%2FInvidious-adon-)
 
-For this to work you either have to have HA on port 8123 or change the port of invidius
+For this to work you either have to have HA on port 8123 or change the port of invidious
 
 ### [Invidious add-on](./example)
 

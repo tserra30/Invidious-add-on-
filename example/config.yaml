@@ -7,6 +7,9 @@ url: "https://github.com/tserra30/Invidious-adon-/tree/main/example"
 arch:
   - aarch64
   - amd64
+  - armhf
+  - armv7
+  - i386
 init: false
 map:
   - share:rw
