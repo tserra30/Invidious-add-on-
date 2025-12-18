@@ -1,15 +1,21 @@
 #!/usr/bin/env bashio
 # ==============================================================================
-# Take down the S6 supervision tree when example fails
+# Take down the S6 supervision tree when Invidious fails
 # s6-overlay docs: https://github.com/just-containers/s6-overlay
 # ==============================================================================
 
 declare APP_EXIT_CODE=${1}
+
+bashio::log.info "Invidious service stopped with exit code ${APP_EXIT_CODE}"
+
+# Stop PostgreSQL gracefully
+if su-exec postgres pg_ctl -D /data/postgresql status > /dev/null 2>&1; then
+    bashio::log.info "Stopping PostgreSQL..."
+    su-exec postgres pg_ctl -D /data/postgresql -w stop
+fi
 
 if [[ "${APP_EXIT_CODE}" -ne 0 ]] && [[ "${APP_EXIT_CODE}" -ne 256 ]]; then
   bashio::log.warning "Halt add-on with exit code ${APP_EXIT_CODE}"
   echo "${APP_EXIT_CODE}" > /run/s6-linux-init-container-results/exitcode
   exec /run/s6/basedir/bin/halt
 fi
-
-bashio::log.info "Service restart after closing"
