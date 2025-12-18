@@ -9,13 +9,22 @@ bashio::log.info "Starting Invidious add-on..."
 # Initialize PostgreSQL if not already done
 if [ ! -d "/data/postgresql" ]; then
     bashio::log.info "Initializing PostgreSQL database..."
-    mkdir -p /data/postgresql
+    mkdir -p /data/postgresql || {
+        bashio::log.error "Failed to create PostgreSQL data directory"
+        exit 1
+    }
     chown -R postgres:postgres /data/postgresql
     # Use s6-setuidgid instead of su-exec
-    s6-setuidgid postgres initdb -D /data/postgresql
+    s6-setuidgid postgres initdb -D /data/postgresql || {
+        bashio::log.error "Failed to initialize PostgreSQL database"
+        exit 1
+    }
     
     # Start PostgreSQL temporarily to create database
-    s6-setuidgid postgres pg_ctl -D /data/postgresql -o "-c listen_addresses='localhost'" -w start
+    s6-setuidgid postgres pg_ctl -D /data/postgresql -o "-c listen_addresses='localhost'" -w start || {
+        bashio::log.error "Failed to start PostgreSQL for initialization"
+        exit 1
+    }
     
     # Create Invidious database and user
     # Note: Password is hardcoded since PostgreSQL only listens on localhost
@@ -31,18 +40,28 @@ fi
 
 # Start PostgreSQL in the background
 bashio::log.info "Starting PostgreSQL..."
-s6-setuidgid postgres pg_ctl -D /data/postgresql -o "-c listen_addresses='localhost'" -w start
+s6-setuidgid postgres pg_ctl -D /data/postgresql -o "-c listen_addresses='localhost'" -w start || {
+    bashio::log.error "Failed to start PostgreSQL"
+    exit 1
+}
 
 # Generate HMAC key if not exists
 if [ ! -f "/data/hmac_key" ]; then
     bashio::log.info "Generating HMAC key..."
-    pwgen -s 32 1 > /data/hmac_key
+    pwgen -s 32 1 > /data/hmac_key || {
+        bashio::log.error "Failed to generate HMAC key"
+        exit 1
+    }
 fi
 
 HMAC_KEY=$(cat /data/hmac_key)
 
 # Create Invidious configuration
 bashio::log.info "Creating Invidious configuration..."
+mkdir -p /invidious/config || {
+    bashio::log.error "Failed to create Invidious config directory"
+    exit 1
+}
 cat > /invidious/config/config.yml << EOF
 database_url: postgres://invidious:invidious@localhost:5432/invidious
 check_tables: true

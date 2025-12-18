@@ -10,8 +10,7 @@ RUN apk add --no-cache \
     postgresql-contrib \
     pwgen \
     curl \
-    ca-certificates \
-    tini
+    ca-certificates
 
 # Execute during the build of the image
 ARG TEMPIO_VERSION BUILD_ARCH
@@ -26,8 +25,7 @@ COPY --from=invidious /invidious /invidious
 # Copy root filesystem
 COPY rootfs /
 
-# Initialize PostgreSQL data directory
+# Initialize PostgreSQL data directory and ensure service scripts are executable
 RUN mkdir -p /var/lib/postgresql/data && \
     chown -R postgres:postgres /var/lib/postgresql && \
-    mkdir -p /config/invidious && \
     chmod +x /etc/services.d/invidious/run /etc/services.d/invidious/finish
