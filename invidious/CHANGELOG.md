@@ -1,0 +1,25 @@
+<!-- https://developers.home-assistant.io/docs/add-ons/presentation#keeping-a-changelog -->
+
+## 1.3.0
+
+- Implement actual Invidious functionality
+- Remove template "Hello World" message
+- Add PostgreSQL database integration
+- Configure Invidious web interface on port 3000
+- Rename directory from 'example' to 'invidious'
+- Fix "Service restart after closing" log message
+- Enable web interface access
+
+## 1.2.0
+
+- Add an apparmor profile
+- Update to 3.15 base image with s6 v3
+- Add a sample script to run as service and constrain in aa profile
+
+## 1.1.0
+
+- Updates
+
+## 1.0.0
+
+- Initial release
