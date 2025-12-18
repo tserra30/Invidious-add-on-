@@ -29,8 +29,16 @@ if [ ! -d "/data/postgresql" ]; then
     # Create Invidious database and user
     # Note: Password is hardcoded since PostgreSQL only listens on localhost
     # and is only accessible within the container. No external access is possible.
-    s6-setuidgid postgres psql -c "CREATE USER invidious WITH PASSWORD 'invidious';"
-    s6-setuidgid postgres psql -c "CREATE DATABASE invidious OWNER invidious;"
+    s6-setuidgid postgres psql -c "CREATE USER invidious WITH PASSWORD 'invidious';" || {
+        bashio::log.error "Failed to create Invidious database user"
+        s6-setuidgid postgres pg_ctl -D /data/postgresql -w stop
+        exit 1
+    }
+    s6-setuidgid postgres psql -c "CREATE DATABASE invidious OWNER invidious;" || {
+        bashio::log.error "Failed to create Invidious database"
+        s6-setuidgid postgres pg_ctl -D /data/postgresql -w stop
+        exit 1
+    }
     
     # Stop PostgreSQL
     s6-setuidgid postgres pg_ctl -D /data/postgresql -w stop
@@ -54,7 +62,15 @@ if [ ! -f "/data/hmac_key" ]; then
     }
 fi
 
-HMAC_KEY=$(cat /data/hmac_key)
+HMAC_KEY=$(cat /data/hmac_key) || {
+    bashio::log.error "Failed to read HMAC key"
+    exit 1
+}
+
+if [ -z "$HMAC_KEY" ]; then
+    bashio::log.error "HMAC key is empty"
+    exit 1
+fi
 
 # Create Invidious configuration
 bashio::log.info "Creating Invidious configuration..."

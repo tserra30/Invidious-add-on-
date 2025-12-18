@@ -8,7 +8,6 @@ This is an add-on for Home Assistant that adds Invidious
 
 ### [Invidious add-on](./invidious)
 
-![Supports aarch64 Architecture][aarch64-shield]
 ![Supports amd64 Architecture][amd64-shield]
 
 _Invidious add-on for Home Assistant._
@@ -32,5 +31,4 @@ Notes to developers after forking or using the github template feature:
 - Do awesome stuff!
  -->
 
-[aarch64-shield]: https://img.shields.io/badge/aarch64-yes-green.svg
 [amd64-shield]: https://img.shields.io/badge/amd64-yes-green.svg
