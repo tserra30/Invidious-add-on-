@@ -1,5 +1,12 @@
 <!-- https://developers.home-assistant.io/docs/add-ons/presentation#keeping-a-changelog -->
 
+## 1.4.0
+
+- Update Invidious to latest version
+- Fix critical architecture mismatch in CI/CD pipeline (remove aarch64)
+- Fix repository URL typo in README.md
+- Improve shell script error handling and quoting
+
 ## 1.3.3
 
 - Fix s6-applyuidgid permission errors by enabling init system
