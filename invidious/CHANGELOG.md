@@ -1,5 +1,11 @@
 <!-- https://developers.home-assistant.io/docs/add-ons/presentation#keeping-a-changelog -->
 
+## 1.3.1
+
+- Fix su-exec permission errors by replacing with s6-setuidgid
+- Remove ARM64 (aarch64) support due to upstream Invidious image limitations
+- Refactor Dockerfile to use multi-stage build pattern
+
 ## 1.3.0
 
 - Implement actual Invidious functionality

@@ -10,27 +10,28 @@ bashio::log.info "Starting Invidious add-on..."
 if [ ! -d "/data/postgresql" ]; then
     bashio::log.info "Initializing PostgreSQL database..."
     mkdir -p /data/postgresql
-    chown postgres:postgres /data/postgresql
-    su-exec postgres initdb -D /data/postgresql
+    chown -R postgres:postgres /data/postgresql
+    # Use s6-setuidgid instead of su-exec
+    s6-setuidgid postgres initdb -D /data/postgresql
     
     # Start PostgreSQL temporarily to create database
-    su-exec postgres pg_ctl -D /data/postgresql -o "-c listen_addresses='localhost'" -w start
+    s6-setuidgid postgres pg_ctl -D /data/postgresql -o "-c listen_addresses='localhost'" -w start
     
     # Create Invidious database and user
     # Note: Password is hardcoded since PostgreSQL only listens on localhost
     # and is only accessible within the container. No external access is possible.
-    su-exec postgres psql -c "CREATE USER invidious WITH PASSWORD 'invidious';"
-    su-exec postgres psql -c "CREATE DATABASE invidious OWNER invidious;"
+    s6-setuidgid postgres psql -c "CREATE USER invidious WITH PASSWORD 'invidious';"
+    s6-setuidgid postgres psql -c "CREATE DATABASE invidious OWNER invidious;"
     
     # Stop PostgreSQL
-    su-exec postgres pg_ctl -D /data/postgresql -w stop
+    s6-setuidgid postgres pg_ctl -D /data/postgresql -w stop
     
     bashio::log.info "PostgreSQL initialization complete"
 fi
 
 # Start PostgreSQL in the background
 bashio::log.info "Starting PostgreSQL..."
-su-exec postgres pg_ctl -D /data/postgresql -o "-c listen_addresses='localhost'" -w start
+s6-setuidgid postgres pg_ctl -D /data/postgresql -o "-c listen_addresses='localhost'" -w start
 
 # Generate HMAC key if not exists
 if [ ! -f "/data/hmac_key" ]; then
@@ -53,7 +54,7 @@ EOF
 # Wait for PostgreSQL to be ready
 bashio::log.info "Waiting for PostgreSQL to be ready..."
 for i in {1..30}; do
-    if su-exec postgres pg_isready -q; then
+    if s6-setuidgid postgres pg_isready -q; then
         bashio::log.info "PostgreSQL is ready"
         break
     fi

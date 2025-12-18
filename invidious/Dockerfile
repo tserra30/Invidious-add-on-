@@ -1,5 +1,7 @@
 # https://developers.home-assistant.io/docs/add-ons/configuration#add-on-dockerfile
 ARG BUILD_FROM
+FROM quay.io/invidious/invidious:latest AS invidious
+
 FROM $BUILD_FROM
 
 # Install PostgreSQL and dependencies
@@ -9,8 +11,7 @@ RUN apk add --no-cache \
     pwgen \
     curl \
     ca-certificates \
-    tini \
-    su-exec
+    tini
 
 # Execute during the build of the image
 ARG TEMPIO_VERSION BUILD_ARCH
@@ -20,7 +21,7 @@ RUN \
     && chmod a+x /usr/bin/tempio
 
 # Copy Invidious files from official image
-COPY --from=quay.io/invidious/invidious:latest /invidious /invidious
+COPY --from=invidious /invidious /invidious
 
 # Copy root filesystem
 COPY rootfs /

@@ -9,9 +9,9 @@ declare APP_EXIT_CODE=${1}
 bashio::log.info "Invidious service stopped with exit code ${APP_EXIT_CODE}"
 
 # Stop PostgreSQL gracefully
-if su-exec postgres pg_ctl -D /data/postgresql status > /dev/null 2>&1; then
+if s6-setuidgid postgres pg_ctl -D /data/postgresql status > /dev/null 2>&1; then
     bashio::log.info "Stopping PostgreSQL..."
-    su-exec postgres pg_ctl -D /data/postgresql -w stop
+    s6-setuidgid postgres pg_ctl -D /data/postgresql -w stop
 fi
 
 if [[ "${APP_EXIT_CODE}" -ne 0 ]] && [[ "${APP_EXIT_CODE}" -ne 256 ]]; then
