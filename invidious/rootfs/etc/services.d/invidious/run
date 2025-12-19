@@ -120,7 +120,8 @@ cd /invidious || {
 
 # Log configuration for debugging
 bashio::log.info "Invidious configuration:"
-bashio::log.info "Database: postgres://invidious:***@localhost:5432/invidious"
+bashio::log.info "Database host: localhost:5432"
+bashio::log.info "Database name: invidious"
 bashio::log.info "Port: 3000"
 bashio::log.info "Host: 0.0.0.0"
 
