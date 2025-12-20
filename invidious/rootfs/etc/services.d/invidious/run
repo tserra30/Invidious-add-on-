@@ -100,10 +100,29 @@ for i in {1..30}; do
     sleep 1
 done
 
+# Verify Invidious binary exists
+if [ ! -f "/invidious/invidious" ]; then
+    bashio::log.error "Invidious binary not found at /invidious/invidious"
+    exit 1
+fi
+
+if [ ! -x "/invidious/invidious" ]; then
+    bashio::log.error "Invidious binary is not executable"
+    exit 1
+fi
+
 # Run Invidious
 bashio::log.info "Starting Invidious on port 3000..."
 cd /invidious || {
     bashio::log.error "Failed to change to Invidious directory"
     exit 1
 }
+
+# Log configuration for debugging
+bashio::log.info "Invidious configuration:"
+bashio::log.info "Database host: localhost:5432"
+bashio::log.info "Database name: invidious"
+bashio::log.info "Port: 3000"
+bashio::log.info "Host: 0.0.0.0"
+
 exec /invidious/invidious

@@ -1,5 +1,12 @@
 <!-- https://developers.home-assistant.io/docs/add-ons/presentation#keeping-a-changelog -->
 
+## 1.5.1
+
+- Fix critical restart loop issue causing supervisor rate limiting
+- Remove automatic container halt on Invidious exit to prevent restart loops
+- Add additional logging and binary verification checks
+- Improve error messages for debugging startup issues
+
 ## 1.5.0
 
 - Version bump for new release
