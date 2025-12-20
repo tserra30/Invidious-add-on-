@@ -1,5 +1,12 @@
 <!-- https://developers.home-assistant.io/docs/add-ons/presentation#keeping-a-changelog -->
 
+## 1.5.2
+
+- Fix supervisor rate limiting issue caused by rapid restart loops
+- Add proper service halt on failures to prevent continuous restarts
+- Improve finish script to exit with code 125 on errors, signaling s6-overlay to stop
+- Enhance error logging to indicate when service is being halted
+
 ## 1.5.1
 
 - Fix critical restart loop issue causing supervisor rate limiting
