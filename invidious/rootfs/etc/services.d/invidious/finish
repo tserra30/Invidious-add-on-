@@ -1,4 +1,5 @@
 #!/usr/bin/with-contenv bashio
+# shellcheck shell=bash
 # ==============================================================================
 # Cleanup when Invidious service stops
 # s6-overlay docs: https://github.com/just-containers/s6-overlay

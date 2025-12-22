@@ -1,5 +1,11 @@
 <!-- https://developers.home-assistant.io/docs/add-ons/presentation#keeping-a-changelog -->
 
+## 1.5.3
+
+- Fix s6-overlay error "can only run as pid 1" by removing conflicting init: true setting
+- Fix shellcheck lint errors by adding shell directive to service scripts
+- Improve compatibility with Home Assistant base image s6-overlay init system
+
 ## 1.5.2
 
 - Fix supervisor rate limiting issue caused by rapid restart loops
