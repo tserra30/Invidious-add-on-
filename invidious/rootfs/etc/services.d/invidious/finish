@@ -29,6 +29,6 @@ if [[ "${APP_EXIT_CODE}" -ne 0 ]] && [[ "${APP_EXIT_CODE}" -ne 256 ]]; then
   # This prevents the supervisor watchdog from restarting the addon in a loop
   # The user can manually restart the addon after fixing the issue
   while true; do
-    sleep 3600
+    sleep 86400  # Sleep for 24 hours to minimize CPU usage
   done
 fi
