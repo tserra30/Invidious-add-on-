@@ -1,5 +1,11 @@
 <!-- https://developers.home-assistant.io/docs/add-ons/presentation#keeping-a-changelog -->
 
+## 1.5.7
+
+- Fix add-on startup failure by updating base image from Alpine 3.15 to Alpine 3.21
+- Align Alpine version with Invidious upstream image for compatibility
+- Base image now uses ghcr.io/home-assistant/amd64-base:3.21
+
 ## 1.5.6
 
 - Add startup confirmation log message when Invidious successfully starts and is listening on port 3000
