@@ -126,4 +126,20 @@ bashio::log.info "Database name: invidious"
 bashio::log.info "Port: 3000"
 bashio::log.info "Host: 0.0.0.0"
 
+# Start a background process to confirm when Invidious is listening
+(
+    # Wait for Invidious to start listening on port 3000
+    for i in {1..60}; do
+        if curl -s -o /dev/null -w '' --connect-timeout 1 http://localhost:3000 2>/dev/null; then
+            bashio::log.info "========================================"
+            bashio::log.info "Invidious add-on has started successfully!"
+            bashio::log.info "Web interface available at port 3000"
+            bashio::log.info "========================================"
+            exit 0
+        fi
+        sleep 1
+    done
+    bashio::log.warning "Invidious may not have started properly - port 3000 not responding after 60 seconds"
+) &
+
 exec /invidious/invidious
