@@ -38,5 +38,4 @@ COPY rootfs /
 RUN mkdir -p /var/lib/postgresql/data && \
     chown -R postgres:postgres /var/lib/postgresql && \
     chmod +x /etc/services.d/invidious/run /etc/services.d/invidious/finish && \
-    mkdir -p /etc/services.d/mcp-server && \
-    chmod +x /etc/services.d/mcp-server/run /etc/services.d/mcp-server/finish || true
+    chmod +x /etc/services.d/mcp-server/run /etc/services.d/mcp-server/finish /usr/local/bin/mcp-server.py
