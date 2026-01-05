@@ -24,6 +24,13 @@ SUPERVISOR_TOKEN = os.getenv('SUPERVISOR_TOKEN', '')
 HA_API_BASE = 'http://supervisor/core/api'
 ADDON_API_BASE = 'http://supervisor'
 
+# JSON-RPC 2.0 Error Codes
+JSONRPC_PARSE_ERROR = -32700
+JSONRPC_INVALID_REQUEST = -32600
+JSONRPC_METHOD_NOT_FOUND = -32601
+JSONRPC_INVALID_PARAMS = -32602
+JSONRPC_INTERNAL_ERROR = -32603
+
 
 class HomeAssistantAPI:
     """Home Assistant API client"""
@@ -40,7 +47,6 @@ class HomeAssistantAPI:
         try:
             req = Request(url, headers=self.headers, method=method)
             if data:
-                req.add_header('Content-Type', 'application/json')
                 req.data = json.dumps(data).encode('utf-8')
             
             with urlopen(req, timeout=10) as response:
@@ -96,10 +102,26 @@ class MCPRequestHandler(BaseHTTPRequestHandler):
             response = self.handle_mcp_request(request)
             self.send_json_response(response)
         except json.JSONDecodeError:
-            self.send_error_response(400, 'Invalid JSON')
+            error_response = {
+                'jsonrpc': '2.0',
+                'id': None,
+                'error': {
+                    'code': JSONRPC_PARSE_ERROR,
+                    'message': 'Parse error: Invalid JSON'
+                }
+            }
+            self.send_json_response(error_response, status=400)
         except Exception as e:
             logger.error(f"Error handling request: {str(e)}")
-            self.send_error_response(500, str(e))
+            error_response = {
+                'jsonrpc': '2.0',
+                'id': None,
+                'error': {
+                    'code': JSONRPC_INTERNAL_ERROR,
+                    'message': str(e)
+                }
+            }
+            self.send_json_response(error_response, status=500)
     
     def do_GET(self):
         """Handle GET requests (health check)"""
@@ -135,7 +157,7 @@ class MCPRequestHandler(BaseHTTPRequestHandler):
         elif method == 'get_state':
             entity_id = params.get('entity_id')
             if not entity_id:
-                return self.error_response(request.get('id'), 'entity_id required')
+                return self.error_response(request.get('id'), 'entity_id required', JSONRPC_INVALID_PARAMS)
             return {
                 'jsonrpc': '2.0',
                 'id': request.get('id'),
@@ -146,7 +168,7 @@ class MCPRequestHandler(BaseHTTPRequestHandler):
             domain = params.get('domain')
             service = params.get('service')
             if not domain or not service:
-                return self.error_response(request.get('id'), 'domain and service required')
+                return self.error_response(request.get('id'), 'domain and service required', JSONRPC_INVALID_PARAMS)
             
             result = self.ha_api.call_service(
                 domain,
@@ -170,13 +192,15 @@ class MCPRequestHandler(BaseHTTPRequestHandler):
         else:
             return self.error_response(request.get('id'), f'Unknown method: {method}')
     
-    def error_response(self, request_id, message):
+    def error_response(self, request_id, message, code=None):
         """Create error response"""
+        if code is None:
+            code = JSONRPC_METHOD_NOT_FOUND
         return {
             'jsonrpc': '2.0',
             'id': request_id,
             'error': {
-                'code': -32601,
+                'code': code,
                 'message': message
             }
         }

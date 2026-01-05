@@ -30,10 +30,21 @@ export MCP_HOST="${MCP_HOST:-127.0.0.1}"
 
 bashio::log.info "MCP server will listen on ${MCP_HOST}:${MCP_PORT}"
 if [[ "${MCP_HOST}" == "0.0.0.0" ]]; then
-    bashio::log.warning "MCP server is configured to listen on all interfaces"
-    bashio::log.warning "This exposes the server externally - ensure proper network security"
+    bashio::log.warning "=========================================="
+    bashio::log.warning "SECURITY WARNING: MCP server configured for external access!"
+    bashio::log.warning "MCP server is listening on ALL network interfaces (0.0.0.0)"
+    bashio::log.warning "This exposes Home Assistant API control externally"
+    bashio::log.warning "Ensure you have:"
+    bashio::log.warning "  - Proper firewall rules in place"
+    bashio::log.warning "  - Network access controls configured"
+    bashio::log.warning "  - Understanding of security implications"
+    bashio::log.warning "For internal use only, set mcp_host to '127.0.0.1'"
+    bashio::log.warning "=========================================="
+elif [[ "${MCP_HOST}" == "127.0.0.1" ]] || [[ "${MCP_HOST}" == "localhost" ]]; then
+    bashio::log.info "MCP server is configured for localhost access only (secure)"
 else
-    bashio::log.info "MCP server is configured for localhost access only"
+    bashio::log.warning "MCP server is listening on ${MCP_HOST}"
+    bashio::log.warning "Verify this is the intended network interface"
 fi
 bashio::log.info "MCP server provides Home Assistant API access via JSON-RPC"
 
