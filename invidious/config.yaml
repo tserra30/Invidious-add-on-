@@ -1,8 +1,8 @@
 # https://developers.home-assistant.io/docs/add-ons/configuration#add-on-config
 name: Invidious
-version: "1.5.7"
+version: "1.6.0"
 slug: invidious
-description: Invidious - Privacy-friendly YouTube frontend
+description: Invidious - Privacy-friendly YouTube frontend with MCP Server
 url: "https://github.com/tserra30/Invidious-add-on-/tree/main/invidious"
 arch:
   - amd64
@@ -11,9 +11,19 @@ map:
   - share:rw
 ports:
   3000/tcp: 3000
+  3001/tcp: 3001
 ports_description:
   3000/tcp: "Web interface"
+  3001/tcp: "MCP Server (Model Context Protocol)"
 webui: "http://[HOST]:[PORT:3000]"
-options: {}
-schema: {}
+options:
+  mcp_enabled: false
+  mcp_port: 3001
+schema:
+  mcp_enabled: bool
+  mcp_port: port
+hassio_api: true
+hassio_role: default
+auth_api: true
+homeassistant_api: true
 image: "ghcr.io/tserra30/{arch}-addon-invidious"

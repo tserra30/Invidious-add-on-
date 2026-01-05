@@ -1,0 +1,31 @@
+#!/usr/bin/with-contenv bashio
+# shellcheck shell=bash
+# ==============================================================================
+# Start MCP Server service
+# s6-overlay docs: https://github.com/just-containers/s6-overlay
+# ==============================================================================
+
+# Check if MCP is enabled
+if ! bashio::config.true 'mcp_enabled' false; then
+    bashio::log.info "MCP Server is disabled in configuration"
+    # Exit gracefully - this tells s6 not to restart the service
+    exec sleep infinity
+fi
+
+bashio::log.info "Starting MCP Server for Home Assistant..."
+
+# Get MCP port from configuration (default to 3001)
+MCP_PORT=$(bashio::config 'mcp_port' '3001')
+bashio::log.info "MCP Server will listen on port ${MCP_PORT}"
+
+# Export environment variables for MCP server
+export HA_URL="http://supervisor/core"
+export SUPERVISOR_TOKEN="${SUPERVISOR_TOKEN}"
+export MCP_PORT="${MCP_PORT}"
+
+# Make sure the script is executable
+chmod +x /usr/local/bin/mcp-server.py
+
+# Start MCP server
+bashio::log.info "Launching MCP Server..."
+exec python3 /usr/local/bin/mcp-server.py

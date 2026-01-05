@@ -1,0 +1,15 @@
+#!/usr/bin/with-contenv bashio
+# shellcheck shell=bash
+# ==============================================================================
+# Cleanup when MCP Server service stops
+# s6-overlay docs: https://github.com/just-containers/s6-overlay
+# ==============================================================================
+
+declare APP_EXIT_CODE=${1}
+
+bashio::log.info "MCP Server service stopped with exit code ${APP_EXIT_CODE}"
+
+# Handle service exit codes
+if [[ "${APP_EXIT_CODE}" -ne 0 ]] && [[ "${APP_EXIT_CODE}" -ne 256 ]]; then
+  bashio::log.warning "MCP Server exited with error code ${APP_EXIT_CODE}"
+fi

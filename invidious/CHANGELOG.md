@@ -1,5 +1,15 @@
 <!-- https://developers.home-assistant.io/docs/add-ons/presentation#keeping-a-changelog -->
 
+## 1.6.0
+
+- Add MCP (Model Context Protocol) server support for AI assistant integration
+- MCP server allows AI assistants to interact with Home Assistant API
+- Add configurable MCP server port (default: 3001)
+- Add MCP enable/disable option (default: disabled)
+- Install Python 3 and MCP dependencies (mcp, homeassistant-api)
+- Add comprehensive documentation for MCP usage and configuration
+- MCP server tools: get_states, call_service, get_services, get_config, get_history
+
 ## 1.5.7
 
 - Fix add-on startup failure by updating base image from Alpine 3.15 to Alpine 3.21
