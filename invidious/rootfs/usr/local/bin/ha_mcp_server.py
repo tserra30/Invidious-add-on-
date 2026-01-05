@@ -204,7 +204,7 @@ class MCPRequestHandler(BaseHTTPRequestHandler):
 def create_handler(ha_api):
     """Create request handler with HA API instance"""
     def handler(*args, **kwargs):
-        MCPRequestHandler(*args, ha_api=ha_api, **kwargs)
+        return MCPRequestHandler(*args, ha_api=ha_api, **kwargs)
     return handler
 
 

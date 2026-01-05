@@ -19,7 +19,9 @@ webui: "http://[HOST]:[PORT:3000]"
 options:
   mcp_enabled: true
   mcp_port: 8099
+  mcp_host: "127.0.0.1"
 schema:
   mcp_enabled: bool
   mcp_port: port?
+  mcp_host: str?
 image: "ghcr.io/tserra30/{arch}-addon-invidious"

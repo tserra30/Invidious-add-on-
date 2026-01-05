@@ -69,12 +69,23 @@ curl http://[your-home-assistant-ip]:8099/health
 
 - **mcp_enabled** (bool, default: true): Enable or disable the MCP server
 - **mcp_port** (port, default: 8099): Port for the MCP server to listen on
+- **mcp_host** (string, default: "127.0.0.1"): Host interface to bind to
+  - Use "127.0.0.1" for localhost only (recommended for security)
+  - Use "0.0.0.0" to listen on all interfaces (external access)
 
 ### Example Configuration
 
 ```yaml
 mcp_enabled: true
 mcp_port: 8099
+mcp_host: "127.0.0.1"  # localhost only (secure)
+```
+
+For external access (use with caution):
+```yaml
+mcp_enabled: true
+mcp_port: 8099
+mcp_host: "0.0.0.0"  # all interfaces
 ```
 
 To disable the MCP server:

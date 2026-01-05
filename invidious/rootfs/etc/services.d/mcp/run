@@ -24,10 +24,17 @@ chmod +x /usr/local/bin/ha_mcp_server.py
 
 # Get MCP configuration from add-on options
 MCP_PORT=$(bashio::config 'mcp_port')
+MCP_HOST=$(bashio::config 'mcp_host')
 export MCP_PORT="${MCP_PORT:-8099}"
-export MCP_HOST="0.0.0.0"
+export MCP_HOST="${MCP_HOST:-127.0.0.1}"
 
 bashio::log.info "MCP server will listen on ${MCP_HOST}:${MCP_PORT}"
+if [[ "${MCP_HOST}" == "0.0.0.0" ]]; then
+    bashio::log.warning "MCP server is configured to listen on all interfaces"
+    bashio::log.warning "This exposes the server externally - ensure proper network security"
+else
+    bashio::log.info "MCP server is configured for localhost access only"
+fi
 bashio::log.info "MCP server provides Home Assistant API access via JSON-RPC"
 
 # Start the MCP server
