@@ -4,13 +4,14 @@ FROM quay.io/invidious/invidious:latest AS invidious
 
 FROM $BUILD_FROM
 
-# Install PostgreSQL and dependencies
+# Install PostgreSQL, Python and dependencies
 RUN apk add --no-cache \
     postgresql \
     postgresql-contrib \
     pwgen \
     curl \
-    ca-certificates
+    ca-certificates \
+    python3
 
 # Execute during the build of the image
 ARG TEMPIO_VERSION BUILD_ARCH
@@ -28,4 +29,6 @@ COPY rootfs /
 # Initialize PostgreSQL data directory and ensure service scripts are executable
 RUN mkdir -p /var/lib/postgresql/data && \
     chown -R postgres:postgres /var/lib/postgresql && \
-    chmod +x /etc/services.d/invidious/run /etc/services.d/invidious/finish
+    chmod +x /etc/services.d/invidious/run /etc/services.d/invidious/finish && \
+    chmod +x /etc/services.d/mcp/run /etc/services.d/mcp/finish && \
+    chmod +x /usr/local/bin/ha_mcp_server.py

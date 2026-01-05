@@ -1,0 +1,34 @@
+#!/usr/bin/with-contenv bashio
+# shellcheck shell=bash
+# ==============================================================================
+# Start MCP server for Home Assistant integration
+# ==============================================================================
+
+# Check if MCP is enabled
+if ! bashio::config.true 'mcp_enabled'; then
+    bashio::log.info "MCP server is disabled in configuration"
+    # Sleep forever to keep service running but idle
+    exec sleep infinity
+fi
+
+bashio::log.info "Starting MCP server for Home Assistant API access..."
+
+# Check if Python 3 is available
+if ! command -v python3 &> /dev/null; then
+    bashio::log.error "Python 3 is not installed"
+    exit 1
+fi
+
+# Make sure the MCP server script is executable
+chmod +x /usr/local/bin/ha_mcp_server.py
+
+# Get MCP configuration from add-on options
+MCP_PORT=$(bashio::config 'mcp_port')
+export MCP_PORT="${MCP_PORT:-8099}"
+export MCP_HOST="0.0.0.0"
+
+bashio::log.info "MCP server will listen on ${MCP_HOST}:${MCP_PORT}"
+bashio::log.info "MCP server provides Home Assistant API access via JSON-RPC"
+
+# Start the MCP server
+exec python3 /usr/local/bin/ha_mcp_server.py

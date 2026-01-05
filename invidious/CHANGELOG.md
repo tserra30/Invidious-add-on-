@@ -1,5 +1,13 @@
 <!-- https://developers.home-assistant.io/docs/add-ons/presentation#keeping-a-changelog -->
 
+## 1.5.8
+
+- Add MCP (Model Context Protocol) server for Home Assistant API integration
+- Enable programmatic access to Home Assistant entities and services via JSON-RPC
+- Add Python 3 support to container
+- Add configuration options for MCP server (mcp_enabled, mcp_port)
+- Update documentation with MCP usage examples and API reference
+
 ## 1.5.7
 
 - Fix add-on startup failure by updating base image from Alpine 3.15 to Alpine 3.21

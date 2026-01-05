@@ -1,0 +1,15 @@
+#!/usr/bin/with-contenv bashio
+# shellcheck shell=bash
+# ==============================================================================
+# Cleanup when MCP service stops
+# ==============================================================================
+
+declare APP_EXIT_CODE=${1}
+
+bashio::log.info "MCP server stopped with exit code ${APP_EXIT_CODE}"
+
+# For MCP server, we don't need special cleanup
+# Just log the exit and let s6 handle it
+if [[ "${APP_EXIT_CODE}" -ne 0 ]] && [[ "${APP_EXIT_CODE}" -ne 256 ]]; then
+    bashio::log.warning "MCP server exited with error code ${APP_EXIT_CODE}"
+fi
